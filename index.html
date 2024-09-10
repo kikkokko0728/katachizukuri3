@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ドラッグで線を書く</title>
+    <style>
+        body {
+            margin: 0;
+            position: relative;
+        }
+        #imageContainer {
+            position: relative;
+            z-index: 1;
+        }
+        #imageContainer img {
+            display: block;
+            width: 50%;
+            height: auto;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 2;
+            background-color: transparent; /* 背景を透明に */
+        }
+    </style>
+</head>
+<body>
+    <!-- GitHub上の画像を表示 -->
+    <div id="imageContainer">
+        <img src="https://github.com/kikkokko0728/katachizukuri2/raw/a24e1ccd112c3cbc1964045a5dab7e6e6e58c40e/question2.png" alt="Question Image">
+    </div>
+
+    <!-- キャンバスを画像の上に配置 -->
+    <canvas id="drawingCanvas"></canvas>
+
+    <script>
+        const canvas = document.getElementById('drawingCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // キャンバスを全画面表示に設定
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+
+        // 描画設定
+        ctx.strokeStyle = 'red';
+        ctx.lineWidth = 12;
+        ctx.lineCap = 'round';
+
+        let isDrawing = false;
+
+        // マウスが押されたときに描画を開始
+        canvas.addEventListener('mousedown', (e) => {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.clientX, e.clientY);
+        });
+
+        // マウスが動いているときに描画
+        canvas.addEventListener('mousemove', (e) => {
+            if (isDrawing) {
+                ctx.lineTo(e.clientX, e.clientY);
+                ctx.stroke();
+            }
+        });
+
+        // マウスが離されたときに描画を終了
+        canvas.addEventListener('mouseup', () => {
+            isDrawing = false;
+            ctx.closePath();
+        });
+
+        // ウィンドウサイズ変更時にキャンバスサイズを更新
+        window.addEventListener('resize', resizeCanvas);
+    </script>
+</body>
+</html>
